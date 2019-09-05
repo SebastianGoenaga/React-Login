@@ -1,84 +1,111 @@
-import React from 'react';
-import { TodoList } from './TodoList.js';
-import {Button, Card, Input, TextField} from "@material-ui/core";
-import DatePicker from "react-datepicker";
+import React, {Component} from 'react';
+import logo from './logo.svg';
+import './App.css';
+import {TodoList} from "./TodoList";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import moment from "moment";
 
-export class TodoApp extends React.Component {
+export class TodoApp extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { items: [], text: '' };
-    this.handleChange = this.handleChange.bind(this);
+    this.state = {items: [], text: '', priority: 0, dueDate: moment()};
+    this.handleTextChange = this.handleTextChange.bind(this);
+    this.handlePriorityChange = this.handlePriorityChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  render() {
-    return (
-        <div>
-          <h3 align="center">TODO</h3>
-          <TodoList items={this.state.items} />
-          <form onSubmit={this.handleSubmit}>
-            <label htmlFor="todo">
-              ¿Qué necesitas recordar?
-            </label>
-            <TextField
-                type="text"
-                id="txt"
-                onChange={this.handleChange}
-                value={this.state.text}
-                variant={"outlined"}
-            />
-            <label htmlFor="priority">
-              Prioridad
-            </label>
-            <Input
-                type="number"
-                id="n"
-                onChange={this.handleChange}
-                value={this.state.priority}
-            />
-            <label htmlFor="date">
-              ¿Cuándo lo harás?
-            </label>
-            <input
-                type="date"
-                id="d"
-                onChange={this.handleChange}
-                value={this.state.dueDate}
-            />
 
-            <Button variant={"outlined"}>
-              Agregar tarea #{this.state.items.length + 1}
-            </Button>
+  render() {
+
+    return (
+        <div className="App">
+          <form onSubmit={this.handleSubmit} className="todo-form">
+            <h3>New TODO</h3>
+            <label htmlFor="text" className="right-margin">
+              Text:
+            </label>
+
+            <input
+                id="text"
+                onChange={this.handleTextChange}
+                value={this.state.text}>
+            </input>
+
+            <br/>
+            <br/>
+            <label htmlFor="priority" className="right-margin">
+              Priority:
+            </label>
+
+            <input
+                id="priority"
+                type="number"
+                onChange={this.handlePriorityChange}
+                value={this.state.priority}>
+            </input>
+            <br/>
+            <br/>
+
+            <DatePicker
+                id="due-date"
+                selected={this.state.dueDate}
+                placeholderText="Due date"
+                onChange={this.handleDateChange}>
+            </DatePicker>
+            <br/>
+            <button>
+              Add #{this.state.items.length + 1}
+            </button>
           </form>
+          <br/>
+          <br/>
+          <TodoList todoList={this.state.items}/>
         </div>
     );
   }
 
-  handleChange(e) {
-    this.setState({ text: document.getElementById('txt').value })
-    this.setState({ priority: document.getElementById('n').value });;
-    this.setState({ dueDate: document.getElementById('d').value });;
+  handleTextChange(e) {
+    this.setState({
+      text: e.target.value
+    });
+  }
+
+  handlePriorityChange(e) {
+    this.setState({
+      priority: e.target.value
+    });
+  }
+
+  handleDateChange(date) {
+    this.setState({
+      dueDate: date
+    });
   }
 
   handleSubmit(e) {
 
     e.preventDefault();
 
-    if (!this.state.text.length) {
+    if (!this.state.text.length || !this.state.priority.length || !this.state.dueDate)
       return;
-    }
 
     const newItem = {
       text: this.state.text,
       priority: this.state.priority,
       dueDate: this.state.dueDate,
-      id: Date.now()
+
     };
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
-      text: ''
+      text: '',
+      priority: '',
+      dueDate: ''
     }));
   }
 
 }
+
+export default TodoApp;

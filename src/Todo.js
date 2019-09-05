@@ -2,14 +2,17 @@ import React from 'react';
 
 export class Todo extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }   
+    // constructor(props) {
+    //     super(props);
+    // }
 
     render() {
-        return (  
-          <h2>{this.props.text} {this.props.priority} {this.props.dueDate.format('DD-MM-YYYY')}</h2>
-	//Do not forget to add the other properties of your TODO!
+        return (
+            <tr>
+                <td>{this.props.text}</td>
+                <td>{this.props.priority}</td>
+                <td>{this.props.dueDate.format('DD-MM-YYYY')}</td>
+            </tr>
         );
     }
 
